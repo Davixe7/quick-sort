@@ -5,25 +5,13 @@ controller("mainController", function($scope){
   $scope.newNumber = 1;
   
   $scope.message = {
-    text:"Application started!",
+    text:"Añade numeros al arreglo",
     status:"success",
-    sloganSuccess : [
-      "¡Genial!", "¡Eso es!", "¡Excelente!", "¡Muy bien!"
-    ],
-    sloganError : [
-      "¡Oh, no!", "¡Error!", "¡Cuidado!", "¡Un momento!"
-    ],
-    getSlogan : function(){
-      var slogan = "";
-      
-      if( this.status === "success" ){
-        slogan = this.sloganSuccess[ Math.floor( Math.random() * ( this.sloganSuccess.length - 0 ) ) ];
-      }else {
-        slogan = this.sloganError[ Math.floor( Math.random() * ( this.sloganError.length - 0 ) ) ];
-      }
-      return slogan;
-    }
   };
+  
+  $scope.numbersValidate = function(){
+    return $scope.numbers.length >= 2;
+  }
   
   $scope.addNumber = function(n) {
     if( $scope.numbers.indexOf(n) >= 0 ) { 
@@ -37,7 +25,7 @@ controller("mainController", function($scope){
     } 
   }
   
-  $scope.order = function(a){
+  $scope.quickSort = function(a){
     if( a.length <= 1 ) return a[0];
     
     var left = [], right = [], pivot = a[0];
@@ -49,16 +37,51 @@ controller("mainController", function($scope){
     }
     
     if(!left.length) {
-      return [pivot, $scope.order(right)];
+      return [pivot, $scope.quickSort(right)];
     }else if(!right.length) {
-      return [$scope.order(left), pivot];
+      return [$scope.quickSort(left), pivot];
     }
     
-    return [$scope.order(left), pivot, $scope.order(right)];
+    return [$scope.quickSort(left), pivot, $scope.quickSort(right)];
   }
   
-  $scope.ordenar = function(){
-    $scope.numbers = $scope.order( $scope.numbers ).join().split(",").map(Number);;
+  $scope.mergeSort = function(items){
+    if (items.length < 2) {
+      return items;
+    }
+    var middle = Math.floor(items.length / 2),
+      left    = items.slice(0, middle),
+      right   = items.slice(middle),
+      params = $scope.merge($scope.mergeSort(left), $scope.mergeSort(right));
+
+    // Add the arguments to replace everything between 0 and last item in the array
+    params.unshift(0, items.length);
+    items.splice.apply(items, params);
+    return items;
+  }
+  
+  $scope.merge = function (left, right){
+    var result  = [],
+    il = 0,
+    ir = 0;
+
+    while (il < left.length && ir < right.length){
+      if( left[il] < right[ir] ){
+        result.push( left[il++] );
+      } else {
+        result.push( right[ir++] );
+      }
+    }
+
+    return result.concat(left.slice(il)).concat(right.slice(ir));
+  }
+  
+  $scope.doQuickSort = function(){
+    $scope.numbers = $scope.quickSort( $scope.numbers ).join().split(",").map(Number);;
+  }
+  
+  $scope.doMergeSort = function(){
+    $scope.numbers = $scope.mergeSort( $scope.numbers );
   }
   
   $scope.setMessage = function(msg, status){

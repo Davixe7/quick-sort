@@ -43,10 +43,11 @@
               </div>
             </div>
             
-            <button type="button" class="btn btn-secondary" ng-click="ordenar()" ng-disabled="">Ordenar!</button>
+            <button type="button" class="btn btn-secondary" ng-click="doQuickSort()" ng-disabled="!numbersValidate()">Quick Sort</button>
+            <button type="button" class="btn btn-secondary" ng-click="doMergeSort()" ng-disabled="!numbersValidate()">Merge Sort</button>
             
             <div class="alert alert-{{message.status}} fade show" role="alert">
-              <strong>{{message.getSlogan()}}</strong> {{message.text}}
+              {{message.text}}
             </div>
           </div>
         </div>
